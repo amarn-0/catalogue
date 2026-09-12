@@ -32,7 +32,6 @@ pipeline {
             steps {
                 script {
                     sh """
-                        ls -lart
                         docker build -t catalogue:${appVersion} .
                         docker images
                     """
