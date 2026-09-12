@@ -17,5 +17,26 @@ pipeline {
                 }
             }
         }
+
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    sh """
+                        npm install
+                    """
+                }
+            }
+        }
+
+        stage('ReadJsonVersion') {
+            steps {
+                script {
+                    sh """
+                        docker build -t catalogue:${appVersion} .
+                        docker images
+                    """
+                }
+            }
+        }
     }
 }
