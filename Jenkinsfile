@@ -6,9 +6,9 @@ pipeline {
     }
     environment {
         appVersion = ""
-        ACC_ID = "160932097178"
-        PROJECT = "roboshop"
-        COMPONENT = "catalogue"
+        acc_id = "160932097178"
+        project = "roboshop"
+        component = "catalogue"
     }
     stages {
         stage('ReadJsonVersion') {
@@ -36,10 +36,10 @@ pipeline {
                 script {
                     withAWS( credentials: 'access-key', region: 'us-east-1'){
                         sh """
-                            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com
-                            docker build ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com/${project}/${component}:${appVersion}
+                            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${acc_id}.dkr.ecr.us-east-1.amazonaws.com
+                            docker build ${acc_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${component}:${appVersion}
                             docker images
-                            docker push ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com/${project}/${component}:${appVersion}
+                            docker push ${acc_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${component}:${appVersion}
                         """
                     }
                 }
