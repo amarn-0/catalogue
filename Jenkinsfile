@@ -6,6 +6,9 @@ pipeline {
     }
     environment {
         appVersion = ""
+        ACC_ID = "160932097178"
+        PROJECT = "roboshop"
+        COMPONENT = "catalogue"
     }
     stages {
         stage('ReadJsonVersion') {
@@ -21,7 +24,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    sh """
+                   sh """
                         npm install
                     """
                 }
@@ -31,10 +34,14 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    sh """
-                        docker build -t catalogue:${appVersion} .
-                        docker images
-                    """
+                    withAWS( credentials: 'access-key', region: 'us-east-1'){
+                        sh """
+                            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com
+                            docker build ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com/${project}/${component}:${appVersion}
+                            docker images
+                            docker push ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com/${project}/${component}:${appVersion}
+                        """
+                    }
                 }
             }
         }
